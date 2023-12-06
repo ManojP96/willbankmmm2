@@ -133,7 +133,3 @@ with st.expander("Return Forecast by Media Channel"):
     with columns[2]:
         fig=summary_plot(summary_df_sorted, x='Efficiency', y='Channel_name', title='Efficiency', text_column='Efficiency',color='Channel_name',format_as_decimal=True)
         st.plotly_chart(fig,use_container_width=True) 
-
-
-# st.dataframe(st.session_state['raw_data'].head())
-
