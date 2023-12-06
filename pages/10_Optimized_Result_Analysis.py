@@ -13,15 +13,17 @@ from classes import class_from_dict
 import plotly.express as px 
 import numpy as np
 
-def summary_plot(data, x, y, title, text_column, color, format_as_percent=False):
+def summary_plot(data, x, y, title, text_column, color, format_as_percent=False, format_as_decimal=False):
     fig = px.bar(data, x=x, y=y, orientation='h',
                  title=title, text=text_column, color=color)
     fig.update_layout(showlegend=False)
     data[text_column] = pd.to_numeric(data[text_column], errors='coerce')
     
-    # Update the format of the displayed text based on magnitude
+    # Update the format of the displayed text based on the chosen format
     if format_as_percent:
         fig.update_traces(texttemplate='%{text:.0%}', textposition='outside', hovertemplate='%{x:.0%}')
+    elif format_as_decimal:
+        fig.update_traces(texttemplate='%{text:.2f}', textposition='outside', hovertemplate='%{x:.2f}')
     else:
         fig.update_traces(texttemplate='%{text:.2s}', textposition='outside', hovertemplate='%{x:.2s}')
     
@@ -84,7 +86,7 @@ if 'raw_data' not in st.session_state:
 st.header('Response Forecast Overview')
 raw_data=st.session_state['raw_data']
 effectiveness_overall=raw_data.groupby('ResponseMetricName').agg({'ResponseMetricValue': 'sum'}).reset_index()
-effectiveness_overall['Efficiency']=effectiveness_overall['ResponseMetricValue'].map(lambda x: x/raw_data['Media Spend'].sum() if x not in ["Total Approved Accounts - Revenue",'BAU approved clients - Revenue'] else raw_data['Media Spend'].sum()/x )
+effectiveness_overall['Efficiency']=effectiveness_overall['ResponseMetricValue'].map(lambda x: x/raw_data['Media Spend'].sum() )
 # st.write(effectiveness_overall)
 columns4= st.columns(3)
 
@@ -93,8 +95,8 @@ with columns4[0]:
     st.plotly_chart(fig,use_container_width=True) 
 
 with columns4[1]:
-    fig=summary_plot(effectiveness_overall, x='Efficiency', y='ResponseMetricName', title='Efficiency', text_column='ResponseMetricValue',color='ResponseMetricName')
-    st.plotly_chart(fig,use_container_width=True) 
+    fig1=summary_plot(effectiveness_overall, x='Efficiency', y='ResponseMetricName', title='Efficiency', text_column='Efficiency',color='ResponseMetricName',format_as_decimal=True)
+    st.plotly_chart(fig1,use_container_width=True) 
 
 # st.header('Return Forecast by Media Channel')
 with st.expander("Return Forecast by Media Channel"):
@@ -129,7 +131,7 @@ with st.expander("Return Forecast by Media Channel"):
         st.plotly_chart(fig,use_container_width=True)  
 
     with columns[2]:
-        fig=summary_plot(summary_df_sorted, x='Efficiency', y='Channel_name', title='Efficiency', text_column='Efficiency',color='Channel_name')
+        fig=summary_plot(summary_df_sorted, x='Efficiency', y='Channel_name', title='Efficiency', text_column='Efficiency',color='Channel_name',format_as_decimal=True)
         st.plotly_chart(fig,use_container_width=True) 
 
 
