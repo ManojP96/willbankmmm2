@@ -26,7 +26,8 @@ import base64
 
 
 
-color_palette = ['#003059','#00EDED', '#A2F3F3',"#304550","#F3F3F0"]
+color_palette = ['#F3F3F0', '#5E7D7E', '#2FA1FF', '#00EDED', '#00EAE4', '#304550', '#EDEBEB', '#7FBEFD', '#003059', '#A2F3F3', '#E1D6E2', '#B6B6B6']
+
 
 CURRENCY_INDICATOR = '$'
 
@@ -515,23 +516,38 @@ def create_channel_summary(scenario):
 
 
 def create_contribution_pie(scenario):
+    color_palette = ['#F3F3F0', '#5E7D7E', '#2FA1FF', '#00EDED', '#00EAE4', '#304550', '#EDEBEB', '#7FBEFD', '#003059', '#A2F3F3', '#E1D6E2', '#B6B6B6']
     total_contribution_fig = make_subplots(rows=1, cols=2, subplot_titles=['Spends', 'Revenue'], specs=[[{"type": "pie"}, {"type": "pie"}]])
-    
-    colors_map = {col: color_palette[i % len(color_palette)] for i, col in enumerate(st.session_state['channels_list'])}
-    colors_map['Non Media'] = color_palette[-1]
 
-    total_contribution_fig.add_trace(
-        go.Pie(labels=[channel_name_formating(channel_name) for channel_name in st.session_state['channels_list']] + ['Non Media'],
-               values=[round(scenario.channels[channel_name].actual_total_spends * scenario.channels[channel_name].conversion_rate, 1) for channel_name in st.session_state['channels_list']] + [0],
-               marker=dict(colors=[colors_map[channel_name] for channel_name in st.session_state['channels_list']] + [color_palette[-1]]),
-               hole=0.3),
-        row=1, col=1)
+    channels_list = st.session_state['channels_list']  # Ensure this contains the correct 12 channels
 
+
+    # Assign colors from the limited palette to channels
+    colors_map = {col: color_palette[i % len(color_palette)] for i, col in enumerate(channels_list)}
+    colors_map['Non Media'] = color_palette[5]  # Assign fixed green color for 'Non Media'
+  # Check if the colors are assigned correctly
+
+    # Add trace for Spends pie chart
     total_contribution_fig.add_trace(
-        go.Pie(labels=[channel_name_formating(channel_name) for channel_name in st.session_state['channels_list']] + ['Non Media'],
-               values=[scenario.channels[channel_name].actual_total_sales for channel_name in st.session_state['channels_list']] + [scenario.correction.sum() + scenario.constant.sum()],
-               hole=0.3),
-        row=1, col=2)
+        go.Pie(
+            labels=[channel_name_formating(channel_name) for channel_name in channels_list] + ['Non Media'],
+            values=[round(scenario.channels[channel_name].actual_total_spends * scenario.channels[channel_name].conversion_rate, 1) for channel_name in channels_list] + [0],
+            marker=dict(colors=[colors_map[channel_name] for channel_name in channels_list]),  # Use the fixed green color for 'Non Media'
+            hole=0.3
+        ),
+        row=1, col=1
+    )
+
+    # Add trace for Revenue pie chart
+    total_contribution_fig.add_trace(
+        go.Pie(
+            labels=[channel_name_formating(channel_name) for channel_name in channels_list] + ['Non Media'],
+            values=[scenario.channels[channel_name].actual_total_sales for channel_name in channels_list] + [scenario.correction.sum() + scenario.constant.sum()],
+            marker=dict(colors=[colors_map[channel_name] for channel_name in channels_list]),  # Use the fixed green color for 'Non Media'
+            hole=0.3
+        ),
+        row=1, col=2
+    )
 
     total_contribution_fig.update_traces(textposition='inside', texttemplate='%{percent:.1%}')
     total_contribution_fig.update_layout(uniformtext_minsize=12, title='Channel contribution', uniformtext_mode='hide')
