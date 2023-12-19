@@ -164,7 +164,7 @@ def initialize_data():
     # uopx_conv_rates = {'streaming_impressions' : 0.007,'digital_impressions' : 0.007,'search_clicks' : 0.00719,'tv_impressions' : 0.000173,
     #                    "digital_clicks":0.005,"streaming_clicks":0.004,'streaming_spends':1,"tv_spends":1,"search_spends":1,
     #                    "digital_spends":1}
-    print('State initialized')
+    #print('State initialized')
     excel = pd.read_excel("Overview_data_test.xlsx",sheet_name=None)
     raw_df = excel['RAW DATA MMM']
 
@@ -239,10 +239,10 @@ def initialize_data():
             
         x = x.astype('float64')
         y = y.astype('float64')
-        print('Printing yyyyyyyyy')
-        print(inp_col)
-        print(x.max())
-        print(y.max())
+        #print('#printing yyyyyyyyy')
+        #print(inp_col)
+        #print(x.max())
+        #print(y.max())
         bounds = ((0, 0, 0, 0), (3*y.max(), 1000, 1, x.max()))
 
         #bounds = ((y.max(), 3*y.max()),(0,1000),(0,1),(0,x.max()))
@@ -263,15 +263,15 @@ def initialize_data():
         ## conversion rates
         spend_col = [_col for _col in spend_df.columns if _col.startswith(inp_col.rsplit('_',1)[0])][0]
 
-        print('printing spendssss')
-        print(spend_col)
+        #print('#printing spendssss')
+        #print(spend_col)
         conv = (spend_df.set_index('Week')[spend_col] / input_df.set_index('Date')[inp_col].clip(lower=1)).reset_index()
         conv.rename(columns={'index':'Week'},inplace=True)
         conv['year'] = conv.Week.dt.year
         conv_rates[inp_col] = list(conv.drop('Week',axis=1).mean().to_dict().values())[0]
-        #print('Before',conv_rates[inp_col])
+        ##print('Before',conv_rates[inp_col])
         # conv_rates[inp_col] = uopx_conv_rates[inp_col]
-        #print('After',(conv_rates[inp_col]))
+        ##print('After',(conv_rates[inp_col]))
         
         
         channel = Channel(name=inp_col,dates=dates,
@@ -331,7 +331,7 @@ def initialize_data():
 #     channel_list = []
 #     for col in raw_df.columns:
 #         if 'click' in col.lower() or 'spend' in col.lower() or 'imp' in col.lower():
-#             #print(col)
+#             ##print(col)
 #             channel_list.append(col)
 #         else:
 #             pass
@@ -417,7 +417,7 @@ def create_channel_summary(scenario):
         name_mod = channel.name.replace('_', ' ')
         if name_mod.lower().endswith(' imp'):
             name_mod = name_mod.replace('Imp',' Impressions')
-        print(name_mod,channel.actual_total_spends,channel.conversion_rate,channel.actual_total_spends * channel.conversion_rate)
+        #print(name_mod,channel.actual_total_spends,channel.conversion_rate,channel.actual_total_spends * channel.conversion_rate)
         summary_columns.append(name_mod)
         actual_spends_rows.append(format_numbers(float(channel.actual_total_spends * channel.conversion_rate)))
         actual_sales_rows.append(format_numbers((float(channel.actual_total_sales))))  
