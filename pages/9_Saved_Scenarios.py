@@ -62,7 +62,7 @@ def summary_df_to_worksheet(df, ws):
     for j,header in enumerate(df.columns.values):
         col = j + 1
         for i in range(1,3):
-            ws.cell(row=i, column=j + 1, value=header[i - 1]).font = Font(bold=True, color='#11B6BD')
+            ws.cell(row=i, column=j + 1, value=header[i - 1]).font = Font(bold=True, color='FF11B6BD')
             ws.cell(row=i,column=j+1).fill = heading_fill
         if  col > 1 and (col - 6)%5==0:    
             ws.merge_cells(start_row=1, end_row=1, start_column = col-3, end_column=col)
