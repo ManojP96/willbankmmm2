@@ -79,9 +79,9 @@ def create_scenario_summary(scenario_dict):
 from openpyxl.styles import PatternFill, Font
 
 def scenario_df_to_worksheet(df, ws):
-    heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')  # Adding alpha value 'FF' for opaque color
+    heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')  # Correctly formatted aRGB hex values
     for j, header in enumerate(df.columns.values):
-        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')
+        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')  # Font color with aRGB hex values
         ws.cell(row=1, column=j + 1).fill = heading_fill
     for i, row in enumerate(df.itertuples()):
         for j, value in enumerate(row):
@@ -91,6 +91,7 @@ def scenario_df_to_worksheet(df, ws):
                 ws.cell(row=i + 2, column=j, value=value)
             else:
                 ws.cell(row=i + 2, column=j, value=value).number_format = '$#,##0.0'
+
 
    
 def download_scenarios():
