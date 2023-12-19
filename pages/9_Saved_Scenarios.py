@@ -57,38 +57,41 @@ def create_scenario_summary(scenario_dict):
     
 
    
-def summary_df_to_worksheet(df, ws):
-    heading_fill = PatternFill(fill_type='solid',start_color='15C39A',end_color='15C39A')
-    for j,header in enumerate(df.columns.values):
-        col = j + 1
-        for i in range(1,3):
-            ws.cell(row=i,column=j+1,value=header[i-1]).font = Font(bold=True, color='#11B6BD')
-            ws.cell(row=i,column=j+1).fill = heading_fill
-        if  col > 1 and (col - 6)%5==0:    
-            ws.merge_cells(start_row=1, end_row=1, start_column = col-3, end_column=col)
-            ws.cell(row=1,column=col).alignment = Alignment(horizontal='center')
-    for i,row in enumerate(df.itertuples()):
-        for j,value in enumerate(row):
-            if j == 0:
-                continue
-            elif (j-2)%4 == 0 or (j-3)%4 == 0:
-                ws.cell(row=i+3, column = j, value=value).number_format = '$#,##0.0' 
-            else:
-                ws.cell(row=i+3, column = j, value=value)
+# def summary_df_to_worksheet(df, ws):
+#     heading_fill = PatternFill(fill_type='solid',start_color='FF11B6BD',end_color='FF11B6BD')
+#     for j,header in enumerate(df.columns.values):
+#         col = j + 1
+#         for i in range(1,3):
+#             ws.cell(row=i,column=j+1,value=header[i-1]).font = Font(bold=True, color='#11B6BD')
+#             ws.cell(row=i,column=j+1).fill = heading_fill
+#         if  col > 1 and (col - 6)%5==0:    
+#             ws.merge_cells(start_row=1, end_row=1, start_column = col-3, end_column=col)
+#             ws.cell(row=1,column=col).alignment = Alignment(horizontal='center')
+#     for i,row in enumerate(df.itertuples()):
+#         for j,value in enumerate(row):
+#             if j == 0:
+#                 continue
+#             elif (j-2)%4 == 0 or (j-3)%4 == 0:
+#                 ws.cell(row=i+3, column = j, value=value).number_format = '$#,##0.0' 
+#             else:
+#                 ws.cell(row=i+3, column = j, value=value)
    
+from openpyxl.styles import PatternFill, Font
+
 def scenario_df_to_worksheet(df, ws):
-    heading_fill = PatternFill(fill_type='solid',start_color='#11B6BD',end_color='#11B6BD')
-    for j,header in enumerate(df.columns.values):
-        ws.cell(row=1,column=j+1,value=header).font = Font(bold=True, color='#11B6BD')
-        ws.cell(row=1,column=j+1).fill = heading_fill
-    for i,row in enumerate(df.itertuples()):
-        for j,value in enumerate(row):
+    heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')  # Adding alpha value 'FF' for opaque color
+    for j, header in enumerate(df.columns.values):
+        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')
+        ws.cell(row=1, column=j + 1).fill = heading_fill
+    for i, row in enumerate(df.itertuples()):
+        for j, value in enumerate(row):
             if j == 0:
                 continue
             elif j == 1:
-                ws.cell(row=i+2, column = j, value=value)
+                ws.cell(row=i + 2, column=j, value=value)
             else:
-                ws.cell(row=i+2, column = j, value=value).number_format = '$#,##0.0' 
+                ws.cell(row=i + 2, column=j, value=value).number_format = '$#,##0.0'
+
    
 def download_scenarios():
     """
