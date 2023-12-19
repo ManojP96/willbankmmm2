@@ -33,9 +33,9 @@ def optimize():
     """
     
     channel_list = [key for key,value in st.session_state['optimization_channels'].items() if value]
-    print('channel_list')
-    print(channel_list)
-    print('@@@@@@@@')
+    #print('channel_list')
+    #print(channel_list)
+    #print('@@@@@@@@')
     if len(channel_list) > 0 :
         scenario = st.session_state['scenario']
         result = st.session_state['scenario'].optimize(st.session_state['total_spends_change'],channel_list)
@@ -60,7 +60,7 @@ def save_scenario(scenario_name):
     #st.session_state['saved_scenarios'][scenario_name] = st.session_state['scenario'].save()
     st.session_state['saved_scenarios'][scenario_name] = class_to_dict(st.session_state['scenario'])
     st.session_state['scenario_input'] = ""
-    print(type(st.session_state['saved_scenarios']))
+    #print(type(st.session_state['saved_scenarios']))
     with open('../saved_scenarios.pkl', 'wb') as f:
         pickle.dump(st.session_state['saved_scenarios'],f)
         
@@ -141,7 +141,7 @@ def update_penalty():
     st.session_state['scenario'].update_penalty(st.session_state['apply_penalty'])
   
 def reset_scenario():
-    # print(st.session_state['default_scenario_dict'])
+    # #print(st.session_state['default_scenario_dict'])
     # st.session_state['scenario']  = class_from_dict(st.session_state['default_scenario_dict'])
     # for channel in st.session_state['scenario'].channels.values():
     #     st.session_state[channel.name] = float(channel.actual_total_spends * channel.conversion_rate)
@@ -285,7 +285,7 @@ if auth_status == True:
     # ========================== UI ========================== #
     # ======================================================== #
     
-    print(list(st.session_state.keys()))
+    #print(list(st.session_state.keys()))
 
     st.header('Simulation')
     main_header = st.columns((2,2))
@@ -366,7 +366,7 @@ if auth_status == True:
                 channel_spends = float(_channel_class.actual_total_spends )
                 min_value = float((1+channel_bounds[0]/100) * channel_spends )
                 max_value = float((1+channel_bounds[1]/100) * channel_spends )
-                #print(st.session_state[channel_name])
+                ##print(st.session_state[channel_name])
                 spend_input = st.text_input(channel_name,
                               key=channel_name,
                               label_visibility='collapsed',
