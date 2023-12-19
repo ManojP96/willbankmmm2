@@ -76,23 +76,28 @@ def create_scenario_summary(scenario_dict):
 #             else:
 #                 ws.cell(row=i+3, column = j, value=value)
    
-from openpyxl.utils import datetime
+from openpyxl.styles import Font, PatternFill
 
 def scenario_df_to_worksheet(df, ws):
     heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')
     for j, header in enumerate(df.columns.values):
-        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')
-        ws.cell(row=1, column=j + 1).fill = heading_fill
+        cell = ws.cell(row=1, column=j + 1, value=header)
+        cell.font = Font(bold=True, color='FF11B6BD')
+        cell.fill = heading_fill
+
     for i, row in enumerate(df.itertuples()):
-        for j, value in enumerate(row):
-            if j == 0:
-                continue
-            elif j == 1:
-                ws.cell(row=i + 2, column=j, value=value)
+        for j, value in enumerate(row[1:], start=1):  # Start from index 1 to skip the index column
+            cell = ws.cell(row=i + 2, column=j, value=value)
+            if isinstance(value, (int, float)):
+                cell.number_format = '$#,##0.0'  # Apply number format for numeric values
+            elif isinstance(value, str):
+                cell.value = value[:32767]  # Truncate string values if they exceed Excel's limit
             else:
-                if isinstance(value, np.datetime64):
-                    value = value.astype('M8[s]').astype(datetime.datetime)  # Convert numpy.datetime64 to Python datetime
-                ws.cell(row=i + 2, column=j, value=value).number_format = '$#,##0.0'
+                # Handle other data types or unsupported values here
+                cell.value = str(value)  # Convert to string by default
+
+    return ws  # Return the modified worksheet
+
 
 
 
