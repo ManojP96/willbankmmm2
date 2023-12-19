@@ -102,7 +102,7 @@ def download_scenarios():
     wb.remove(wb.active)
     st.session_state['xlsx_buffer'] = io.BytesIO()
     summary_df = None
-    print(scenarios_to_download)
+    #print(scenarios_to_download)
     for scenario_name in scenarios_to_download:
         scenario_dict =  st.session_state['saved_scenarios'][scenario_name]
         _spends = []
@@ -188,7 +188,7 @@ auth_status = st.session_state.get('authentication_status')
 if auth_status == True:
     is_state_initiaized = st.session_state.get('initialized',False)
     if not is_state_initiaized:
-        print("Scenario page state reloaded")
+        #print("Scenario page state reloaded")
         initialize_data()
 
 
