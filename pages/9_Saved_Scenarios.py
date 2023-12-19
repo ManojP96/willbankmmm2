@@ -76,10 +76,13 @@ def create_scenario_summary(scenario_dict):
 #             else:
 #                 ws.cell(row=i+3, column = j, value=value)
    
+from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, PatternFill
+import logging
 
 def scenario_df_to_worksheet(df, ws):
     heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')
+    
     for j, header in enumerate(df.columns.values):
         cell = ws.cell(row=1, column=j + 1, value=header)
         cell.font = Font(bold=True, color='FF11B6BD')
@@ -87,16 +90,20 @@ def scenario_df_to_worksheet(df, ws):
 
     for i, row in enumerate(df.itertuples()):
         for j, value in enumerate(row[1:], start=1):  # Start from index 1 to skip the index column
-            cell = ws.cell(row=i + 2, column=j, value=value)
-            if isinstance(value, (int, float)):
-                cell.number_format = '$#,##0.0'  # Apply number format for numeric values
-            elif isinstance(value, str):
-                cell.value = value[:32767]  # Truncate string values if they exceed Excel's limit
-            else:
-                # Handle other data types or unsupported values here
-                cell.value = str(value)  # Convert to string by default
+            try:
+                cell = ws.cell(row=i + 2, column=j, value=value)
+                if isinstance(value, (int, float)):
+                    cell.number_format = '$#,##0.0'
+                elif isinstance(value, str):
+                    cell.value = value[:32767]
+                else:
+                    cell.value = str(value)
+            except ValueError as e:
+                logging.error(f"Error assigning value '{value}' to cell {get_column_letter(j)}{i+2}: {e}")
+                cell.value = None  # Assign None to the cell where the error occurred
 
-    return ws  # Return the modified worksheet
+    return ws
+
 
 
 
