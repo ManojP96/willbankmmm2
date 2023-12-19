@@ -76,12 +76,12 @@ def create_scenario_summary(scenario_dict):
 #             else:
 #                 ws.cell(row=i+3, column = j, value=value)
    
-from openpyxl.styles import PatternFill, Font
+from openpyxl.utils import datetime
 
 def scenario_df_to_worksheet(df, ws):
-    heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')  # Correctly formatted aRGB hex values
+    heading_fill = PatternFill(start_color='FF11B6BD', end_color='FF11B6BD', fill_type='solid')
     for j, header in enumerate(df.columns.values):
-        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')  # Font color with aRGB hex values
+        ws.cell(row=1, column=j + 1, value=header).font = Font(bold=True, color='FF11B6BD')
         ws.cell(row=1, column=j + 1).fill = heading_fill
     for i, row in enumerate(df.itertuples()):
         for j, value in enumerate(row):
@@ -90,7 +90,10 @@ def scenario_df_to_worksheet(df, ws):
             elif j == 1:
                 ws.cell(row=i + 2, column=j, value=value)
             else:
+                if isinstance(value, np.datetime64):
+                    value = value.astype('M8[s]').astype(datetime.datetime)  # Convert numpy.datetime64 to Python datetime
                 ws.cell(row=i + 2, column=j, value=value).number_format = '$#,##0.0'
+
 
 
    
