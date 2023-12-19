@@ -48,7 +48,7 @@ columns = st.columns((1,1,3))
 
 with columns[0]:
     st.metric(label = 'Spends', value=format_numbers(float(scenario.actual_total_spends)))
-print(f"##################### {scenario.actual_total_sales} ##################")
+###print(f"##################### {scenario.actual_total_sales} ##################")
 with columns[1]:
     st.metric(label = target, value=format_numbers(float(scenario.actual_total_sales),include_indicator=False))
 
