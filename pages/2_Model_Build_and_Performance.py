@@ -213,7 +213,7 @@ if st.button("Build Models"):
       progress_text.text(f'Completed iterations: {completed_iterations_text},Time Elapsed (min): {time_elapsed_minutes:.2f}')
   
 st.write(f'Out of {st.session_state["iterations"]} iterations : {len(st.session_state["Model_results"]["Model_object"])} valid models')
-
+pd.DataFrame(st.session_state['Model_results']).to_csv('model_output.csv')
 
 def to_percentage(value):
   return f'{value * 100:.1f}%'   
