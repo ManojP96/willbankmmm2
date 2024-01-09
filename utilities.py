@@ -515,7 +515,7 @@ def create_channel_summary(scenario):
 # Define a shared color palette
 
 
-def create_contribution_pie(scenario):
+def create_contribution_pie():
     color_palette = ['#F3F3F0', '#5E7D7E', '#2FA1FF', '#00EDED', '#00EAE4', '#304550', '#EDEBEB', '#7FBEFD', '#003059', '#A2F3F3', '#E1D6E2', '#B6B6B6']
     total_contribution_fig = make_subplots(rows=1, cols=2, subplot_titles=['Spends', 'Revenue'], specs=[[{"type": "pie"}, {"type": "pie"}]])
 
