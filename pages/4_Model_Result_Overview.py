@@ -72,7 +72,7 @@ with columns[0]:
 st.markdown("<hr>",unsafe_allow_html=True)
 ##############################
 
-st.plotly_chart(create_contribution_pie(scenario),use_container_width=True)
+st.plotly_chart(create_contribution_pie(),use_container_width=True)
 st.markdown("<hr>",unsafe_allow_html=True)
 
 
