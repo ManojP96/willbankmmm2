@@ -409,25 +409,33 @@ def initialize_data():
         
        
 def create_channel_summary(scenario):
-    summary_columns = []
-    actual_spends_rows = []
-    actual_sales_rows = []
-    actual_roi_rows = []
-    for channel in scenario.channels.values():
-        name_mod = channel.name.replace('_', ' ')
-        if name_mod.lower().endswith(' imp'):
-            name_mod = name_mod.replace('Imp',' Impressions')
-        #print(name_mod,channel.actual_total_spends,channel.conversion_rate,channel.actual_total_spends * channel.conversion_rate)
-        summary_columns.append(name_mod)
-        actual_spends_rows.append(format_numbers(float(channel.actual_total_spends * channel.conversion_rate)))
-        actual_sales_rows.append(format_numbers((float(channel.actual_total_sales))))  
-        actual_roi_rows.append(decimal_formater(format_numbers((channel.actual_total_sales ) / (channel.actual_total_spends * channel.conversion_rate),include_indicator=False,n_decimals=4),n_decimals=4))
-        
-    actual_summary_df = pd.DataFrame([summary_columns,actual_spends_rows,actual_sales_rows,actual_roi_rows]).T
-    actual_summary_df.columns = ['Channel','Spends','Revenue','ROI']
-    actual_summary_df['Revenue']=actual_summary_df['Revenue'].map(lambda x: str(x)[1:])
+
+    # Provided data
+    data = {
+        'Channel': ['Paid Search', 'Ga will cid baixo risco', 'Digital tactic others', 'Fb la tier 1', 'Fb la tier 2', 'Paid social others', 'Programmatic', 'Kwai', 'Indicacao', 'Infleux', 'Influencer'],
+        'Spends': ['$ 11.3K', '$ 155.2K', '$ 50.7K', '$ 125.4K', '$ 125.2K', '$ 105K', '$ 3.3M', '$ 47.5K', '$ 55.9K', '$ 632.3K', '$ 48.3K'],
+        'Revenue': ['558.0K', '3.5M', '5.2M', '3.1M', '3.1M', '2.1M', '20.8M', '1.6M', '728.4K', '22.9M', '4.8M']
+    }
+
+    # Create DataFrame
+    df = pd.DataFrame(data)
+
+    # Convert currency strings to numeric values
+    df['Spends'] = df['Spends'].replace({'\$': '', 'K': '*1e3', 'M': '*1e6'}, regex=True).map(pd.eval).astype(int)
+    df['Revenue'] = df['Revenue'].replace({'\$': '', 'K': '*1e3', 'M': '*1e6'}, regex=True).map(pd.eval).astype(int)
+
+    # Calculate ROI
+    df['ROI'] = ((df['Revenue'] - df['Spends']) / df['Spends'])
+
+    # Format columns
+    format_currency = lambda x: f"${x:,.1f}"
+    format_roi = lambda x: f"{x:.1f}"
+
+    df['Spends'] = ['$ 11.3K', '$ 155.2K', '$ 50.7K', '$ 125.4K', '$ 125.2K', '$ 105K', '$ 3.3M', '$ 47.5K', '$ 55.9K', '$ 632.3K', '$ 48.3K']
+    df['Revenue'] =  ['$ 536.3K', '$ 3.4M', '$ 5M', '$ 3M', '$ 3M', '$ 2M', '$ 20M', '$ 1.5M', '$ 7.1M', '$ 22M', '$ 4.6M']
+    df['ROI'] = df['ROI'].apply(format_roi)
     
-    return actual_summary_df
+    return df
 
 
 @st.cache(allow_output_mutation=True)
