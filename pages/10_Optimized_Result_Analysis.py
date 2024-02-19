@@ -14,7 +14,6 @@ import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
 import pandas as pd
-from pandas.core.indexes.numeric import NumericIndex
 from pandas import NumericIndex
 
 
