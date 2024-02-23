@@ -140,7 +140,7 @@ effectiveness_overall['Efficiency']=effectiveness_overall['ResponseMetricValue']
 # st.write(effectiveness_overall)
 
 columns6=st.columns(3)
-columns4= st.columns([0.55,0.45])
+
 effectiveness_overall.sort_values(by=['ResponseMetricValue'],ascending=False,inplace=True)
 effectiveness_overall=np.round(effectiveness_overall,2)
 effectiveness_overall['ResponseMetric'] = effectiveness_overall['ResponseMetricName'].apply(lambda x: 'BAU' if 'BAU' in x else ('Gamified' if 'Gamified' in x else x))
@@ -182,18 +182,56 @@ with columns6[0]:
     revenue=(effectiveness_overall[effectiveness_overall['ResponseMetricName']=='Total Approved Accounts - Revenue']['ResponseMetricValue']).iloc[0]
     revenue=round(revenue / 1_000_000, 2)
 
-    st.metric('Total Revenue', f"${revenue} M")
-with columns6[1]:
-    BAU=(effectiveness_overall[effectiveness_overall['ResponseMetricName']=='BAU approved clients - Revenue']['ResponseMetricValue']).iloc[0]
-    BAU=round(BAU / 1_000_000, 2)
-    st.metric('BAU approved clients - Revenue', f"${BAU} M")
-with columns6[2]:
-    Gam=(effectiveness_overall[effectiveness_overall['ResponseMetricName']=='Gamified approved clients - Revenue']['ResponseMetricValue']).iloc[0]
-    Gam=round(Gam / 1_000_000, 2)
-    st.metric('Gamified approved clients - Revenue', f"${Gam} M")
+#     st.metric('Total Revenue', f"${revenue} M")
+# with columns6[1]:
+#     BAU=(effectiveness_overall[effectiveness_overall['ResponseMetricName']=='BAU approved clients - Revenue']['ResponseMetricValue']).iloc[0]
+#     BAU=round(BAU / 1_000_000, 2)
+#     st.metric('BAU approved clients - Revenue', f"${BAU} M")
+# with columns6[2]:
+#     Gam=(effectiveness_overall[effectiveness_overall['ResponseMetricName']=='Gamified approved clients - Revenue']['ResponseMetricValue']).iloc[0]
+#     Gam=round(Gam / 1_000_000, 2)
+#     st.metric('Gamified approved clients - Revenue', f"${Gam} M")
 
 # st.write(effectiveness_overall)
+data = {'Revenue': ['BAU approved clients - Revenue', 'Gamified approved clients- Revenue'],
+        'ResponseMetricValue': [70200000, 1770000],
+        'Efficiency':[127.54,3.21]}
+df = pd.DataFrame(data)
+
+
+columns9=st.columns([0.60,0.40])
+with columns9[0]:
+    figd = px.pie(df, 
+              names='Revenue', 
+              values='ResponseMetricValue',
+              hole=0.3,  # set the size of the hole in the donut
+              title='Effectiveness')
+    figd.update_layout(
+        margin=dict(l=0, r=0, b=0, t=0),width=100, height=180,legend=dict(
+        orientation='v',  # set orientation to horizontal
+        x=0,  # set x to 0 to move to the left
+        y=0.8  # adjust y as needed
+    )
+    )
+
+    st.plotly_chart(figd, use_container_width=True)
+
+with columns9[1]:
+    figd1 = px.pie(df, 
+              names='Revenue', 
+              values='Efficiency',
+              hole=0.3,  # set the size of the hole in the donut
+              title='Efficiency')
+    figd1.update_layout(
+    margin=dict(l=0, r=0, b=0, t=0),width=100,height=180,showlegend=False
+)
+    st.plotly_chart(figd1, use_container_width=True)
+
 effectiveness_overall['Response Metric Name']=effectiveness_overall['ResponseMetricName']
+
+
+
+columns4= st.columns([0.55,0.45])
 with columns4[0]:
     fig=px.funnel(effectiveness_overall[~(effectiveness_overall['ResponseMetricName'].isin(['Total Approved Accounts - Revenue',
                                                                                           'BAU approved clients - Revenue',
