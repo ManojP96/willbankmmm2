@@ -256,7 +256,7 @@ class Scenario:
         )
         self.delta_sales = self.modified_total_sales - self.actual_total_sales
 
-    def optimize_spends(self, sales_percent, channels_list, algo="COBYLA"):
+    def optimize_spends(self, sales_percent, channels_list, algo="SLSQP"):
         desired_sales = self.actual_total_sales * (1 + sales_percent / 100.0)
 
         def constraint(x):
