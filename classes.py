@@ -285,7 +285,7 @@ class Scenario:
             x0=initial_point,
             constraints=constraints,
             method=algo,
-            options={"maxiter": int(1e7), "catol": 1},
+            options={"maxiter": int(2e7), "catol": 1},
         )
 
         for channel_name, modified_spends in zip(channels_list, res.x):
