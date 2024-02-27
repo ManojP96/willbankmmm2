@@ -10,4 +10,4 @@ def test():
         count+=1
         st.write(count)
 
-st.button('test',on_click=test))
+st.button('test',on_click=test)
